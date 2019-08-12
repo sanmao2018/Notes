@@ -125,3 +125,30 @@ Python之禅中有这么一句话：Explicit is better than implicit（明了胜
 **reduce()** 函数会对参数序列中元素进行累积。
 
 函数将一个数据集合（链表，元组等）中的所有数据进行下列操作：用传给 reduce 中的函数 function（有两个参数）先对集合中的第 1、2 个元素进行操作，得到的结果再与第三个数据用 function 函数运算，最后得到一个结果。
+
+###monkey patch
+
+所谓的猴子补丁，是指在运行时修改类或模块，而不去改变源码，达到hot patch的目的。
+
+替换方法
+
+
+
+替换模块
+
+```
+import json
+import ujson
+
+def monkey_patch_json():
+    json.__name__ = 'ujson'
+    json.dumps = ujson.dumps
+    json.loads = ujson.loads
+    # json.dump = ujson.dump
+    # json.load = ujson.load
+
+monkey_patch_json()
+```
+
+
+
