@@ -1,5 +1,7 @@
 ## python相关
 
+[toc]
+
 ### 内嵌函数
 
 > 即函数内部定义的函数
@@ -126,7 +128,7 @@ Python之禅中有这么一句话：Explicit is better than implicit（明了胜
 
 函数将一个数据集合（链表，元组等）中的所有数据进行下列操作：用传给 reduce 中的函数 function（有两个参数）先对集合中的第 1、2 个元素进行操作，得到的结果再与第三个数据用 function 函数运算，最后得到一个结果。
 
-###monkey patch
+### monkey patch
 
 所谓的猴子补丁，是指在运行时修改类或模块，而不去改变源码，达到hot patch的目的。
 
@@ -149,6 +151,44 @@ def monkey_patch_json():
 
 monkey_patch_json()
 ```
+
+### 关于psutil
+
+> `cpu_percent`(*interval=None*)
+>
+> Return a float representing the process CPU utilization as a percentage which can also be `> 100.0` in case of a process running multiple threads on different CPUs. When *interval* is > `0.0` compares process times to system CPU times elapsed before and after the interval (blocking). When interval is `0.0` or `None` compares process times to system CPU times elapsed since last call, returning immediately. That means the first time this is called it will return a meaningless `0.0` value which you are supposed to ignore. In this case is recommended for accuracy that this function be called a second time with at least `0.1` seconds between calls. Example:
+>
+> ```
+> >>> import psutil
+> >>> p = psutil.Process()
+> >>> # blocking
+> >>> p.cpu_percent(interval=1)
+> 2.0
+> >>> # non-blocking (percentage since last call)
+> >>> p.cpu_percent(interval=None)
+> 2.9
+> ```
+>
+> Note
+>
+>  
+>
+> the returned value can be > 100.0 in case of a process running multiple threads on different CPU cores.
+>
+> Note
+>
+>  
+>
+> the returned value is explicitly *not* split evenly between all available CPUs (differently from [`psutil.cpu_percent()`](https://psutil.readthedocs.io/en/latest/#psutil.cpu_percent)). This means that a busy loop process running on a system with 2 logical CPUs will be reported as having 100% CPU utilization instead of 50%. This was done in order to be consistent with `top` UNIX utility and also to make it easier to identify processes hogging CPU resources independently from the number of CPUs. It must be noted that `taskmgr.exe` on Windows does not behave like this (it would report 50% usage instead). To emulate Windows `taskmgr.exe` behavior you can do:`p.cpu_percent() / psutil.cpu_count()`.
+>
+> Warning
+>
+>  
+>
+> the first time this method is called with interval = `0.0` or `None` it will return a meaningless `0.0` value which you are supposed to ignore.
+>
+> 1. interval为0没有意义
+> 2. 对于windows来说要除以cpu核数
 
 
 
