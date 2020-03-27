@@ -174,4 +174,17 @@
 >
 > **这样的用法确实繁琐，使用上比起go要复杂的多**
 
-l
+###  
+
+### QEvent
+
+> TODO:待补充
+
+### QVariant
+
+> TODO:待补充
+
+### qobject_cast
+
+> 安全的类型转换,转换的类必须有Q_OBJECT
+

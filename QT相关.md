@@ -161,7 +161,7 @@
 
 #### QCoreApplication
 
-> 1 .QCoreApplication用于non-gui的应用程序。QApplication用于gui的应用程序。（是否需要包含QtGui库）。
+> 1 .QCoreApplication用于non-gui的应用程序。QApplication用于gui的应用程序。（是否需要包含QtGui库）。image scaled
 >
 > 2。继承关系 父----->子  QObject----QCoreApplication---QGuiApplication--QApplication
 >
@@ -173,3 +173,104 @@
 
 >  
 
+### QT智能指针
+
+> Qt 的智能指针包括：
+>
+> - QSharedPointer
+> - QScopedPointer
+> - QScopedArrayPointer
+> - QWeakPointer
+> - QPointer
+> - QSharedDataPointer
+
+### QPixmap
+
+> QPixmap类用于绘图设备的图像显示，它可以作为一个QPaintDevice对象，也可以加载到一个控件中，通常是标签或按钮，用于在标签或按钮上显示图像。
+> QPixmap可以读取的图像文件类型有BMP、GIF、JPG、JPEG、PNG、PBM、PGM、PPM、XBM、XPM等。
+>
+> ## 方法
+>
+> | 方法         | 描述                             |
+> | ------------ | -------------------------------- |
+> | copy()       | 从QRect对象复制到QPixmap对象     |
+> | fromImage()  | 将QImage对象转换为QPixmap对象    |
+> | grabWIdget() | 从给定的窗口小控件创建一个像素图 |
+> | grabWindow() | 在窗口中创建数据的像素图         |
+> | load()       | 加载图像文件作为QPixmap对象      |
+> | save()       | 将QPixmap对象保存为文件          |
+> | toImage()    | 将QPixmap对象转换为QImage对象    |
+
+### QElapsedTimer
+
+> QElapsedTimer提供了一种快捷的计算流逝时间的方法。它通常被用来计算两个事件或操作之间过去了多久。并且，该类的方法非常类似于我们之前讲过的QTime类的三个计时函数，所以，我们可以很快速的在使用这两个类的代码之间进行移植。但是，不像QTime，QElapsedTimer会尽可能的使用某种单调时钟。这也就意味着，没办法将QElapsedTimer对象转换成人类可读的时间格式。
+>
+> 这个类的典型使用方法就是测量一个耗时操作花了多少时间。最简单的例子如下：
+>
+>       QElapsedTimer timer;
+>       timer.start();
+>    
+>       slowOperation1();
+>    
+>       qDebug() << "The slow operation took" << timer.elapsed() << "milliseconds";
+> 在这个例子中，我们下定义了一个QElapsedTimer的对象，然后调用它的start() 方法开始计时，完成一个耗时操作后，再调用它的elapsed() 方法，得到耗时操作所花费的具体时间，以毫秒计算。
+> 我们也可以在一个耗时操作完成后，通过elapsed() 函数的返回值来决定下一个耗时操作可以运行的时间。这对于需要在一定的时间周期内完成几个耗时操作来说是至关重要的。比如下面代码所展现的案例：
+>
+> 
+>
+> ```C++
+>   void executeSlowOperations(int timeout)
+>   {
+>       QElapsedTimer timer;
+>       timer.start();
+>       slowOperation1();
+>       int remainingTime = timeout - timer.elapsed();
+>       if (remainingTime > 0)
+>       slowOperation2(remainingTime);
+>   }
+> ```
+> 
+>
+> 另一个QElapsedTimer的使用案例是，一个具体的操作需要运行一定的时间长度。对于这种需求，QElapsedTimer提供了hasExpired() 函数，这个函数可以判断自从上次调用start() 或restart() 之后，是否过去了多少毫秒。如下代码所示：
+> 
+>
+> ```C++
+>   void executeOperationsForTime(int ms)
+>   {
+>       QElapsedTimer timer;
+>       timer.start();
+> 	  while (!timer.hasExpired(ms))
+>       slowOperation1();
+>    }
+> ```
+> 上面我们说，QElapsedTimer会使用运行平台所支持的某种单调参考时钟。这具有额外的好处，它可以使QElapsedTimer不受系统时间调整的影响，也不受系统时区设置的影响。当然，相对的，这也意味着我们只能把QElapsedTimer的值和那些使用了同样参考时钟的值相比较。特别是，当我们把QElapsedTimer的自从参考点以来的值序列化到某个变量中后，更应该注意这点。并且，不应该把这些值通过网络进行交换或存储到磁盘，因为无法保证接收端的计算机和产生该值的计算机是否使用同一种参考时钟和参考点，也无法保证其自从参考点以来是否发生过重启。但是，我们可以将这些值在运行在同一太机器上的不同进程间进行交换，条件是他们都使用相同的参考时钟。QElapsedTimer在同一台机器上总是使用相同的参考时钟，所以，在一个进程中比较来自另一个进程的QElapsedTimer值是安全的。
+> 注意，QElapsedTimer所使用的时钟类型，有一些是有范围限制的，通常是32-bit，当达到上限时会发生溢出。QElapsedTimer会处理这种情况并提供一致时间。但是，当从QElapsedTimer中提取时间时，同一机器上的两个不同的进程会对实际逝去的时间有不同的理解。
+> ————————————————
+> 版权声明：本文为CSDN博主「求道玉」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+> 原文链接：https://blog.csdn.net/Amnes1a/article/details/64904690
+
+### QImge
+
+> ### [uchar](https://doc.qt.io/qt-5/qtglobal.html#uchar-typedef) *QImage::bits()
+>
+> Returns a pointer to the first pixel data. This is equivalent to [scanLine](https://doc.qt.io/qt-5/qimage.html#scanLine)(0).
+>
+> Note that [QImage](https://doc.qt.io/qt-5/qimage.html) uses [implicit data sharing](https://doc.qt.io/qt-5/implicit-sharing.html). This function performs a deep copy of the shared pixel data, thus ensuring that this [QImage](https://doc.qt.io/qt-5/qimage.html) is the only one using the current return value.
+>
+> **See also** [scanLine](https://doc.qt.io/qt-5/qimage.html#scanLine)(), [sizeInBytes](https://doc.qt.io/qt-5/qimage.html#sizeInBytes)(), and [constBits](https://doc.qt.io/qt-5/qimage.html#constBits)().
+>
+> ### const [uchar](https://doc.qt.io/qt-5/qtglobal.html#uchar-typedef) *QImage::bits() const
+>
+> This is an overloaded function.
+>
+> Note that [QImage](https://doc.qt.io/qt-5/qimage.html) uses [implicit data sharing](https://doc.qt.io/qt-5/implicit-sharing.html), but this function does *not* perform a deep copy of the shared pixel data, because the returned data is const.
+>
+> 获取图像原数据的方法
+
+#### QML Settings
+
+> The Settings type provides persistent platform-independent application settings.
+>
+> **Note:** This type is made available by importing the **Qt.labs.settings** module. *Types in the Qt.labs module are not guaranteed to remain compatible in future versions.*
+>
+> Users normally expect an application to remember its settings (window sizes and positions, options, etc.) across sessions. The Settings type enables you to save and restore such application settings with the minimum of effort.
